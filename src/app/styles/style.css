@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "ALS Hauss";
+  src: url("/fonts/als_hauss_regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "ALS Hauss";
+  src: url("/fonts/als_hauss_medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ALS Hauss";
+  src: url("/fonts/als_hauss_bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root,
+.theme-light {
+  color-scheme: light;
+  --c-pr: 0 113 206;
+  --c-prh: 0 91 168;
+  --c-prt: 0 91 168;
+  --c-prl: 0 113 206;
+  --c-ac: 0 174 239;
+  --c-acl: 229 246 253;
+  --c-acb: 166 227 250;
+  --c-tx: 17 24 39;
+  --c-tx2: 107 114 128;
+  --c-tx3: 55 65 81;
+  --c-txm: 151 156 166;
+  --c-bg: 255 255 255;
+  --c-surf: 247 250 253;
+  --c-page: 221 231 240;
+  --c-side: 242 247 252;
+  --c-bd: 214 228 240;
+  --c-line: 232 239 247;
+  --c-mut: 220 234 247;
+  --c-skel: 226 232 240;
+  --c-skel2: 241 245 249;
+  --c-ok: 22 163 74;
+  --c-okbg: 220 252 231;
+  --c-okt: 21 128 61;
+  --c-wn: 245 158 11;
+  --c-wnbg: 254 243 199;
+  --c-wnt: 180 83 9;
+  --c-dg: 220 38 38;
+  --c-dgbg: 254 226 226;
+  --c-dgt: 185 28 28;
+  --c-dgl: 220 38 38;
+  --c-dgh: 185 28 28;
+  --c-dgsoft: 254 246 246;
+  --c-nt: 107 114 128;
+  --c-ntbg: 243 244 246;
+}
+
+.theme-light {
+  color: rgb(var(--c-tx));
+}
+
+.dark {
+  color-scheme: dark;
+    --c-pr: 58 118 184;
+  --c-prh: 48 100 160;
+  --c-prt: 158 203 244;
+  --c-prl: 142 190 236;
+  --c-ac: 0 174 239;
+  --c-acl: 46 52 62;
+  --c-acb: 74 84 100;
+  --c-tx: 236 236 239;
+  --c-tx2: 161 161 170;
+  --c-tx3: 212 212 216;
+  --c-txm: 150 150 160;
+  --c-bg: 38 38 42;
+  --c-surf: 32 32 36;
+  --c-page: 27 27 30;
+  --c-side: 23 23 26;
+  --c-bd: 63 63 70;
+  --c-line: 50 50 56;
+  --c-mut: 58 58 64;
+  --c-skel: 52 52 58;
+  --c-skel2: 44 44 50;
+  --c-ok: 92 168 128;
+  --c-okbg: 33 52 43;
+  --c-okt: 150 206 174;
+  --c-wn: 206 164 92;
+  --c-wnbg: 58 49 34;
+  --c-wnt: 226 196 140;
+  --c-dg: 190 82 82;
+  --c-dgbg: 62 37 39;
+  --c-dgt: 234 160 160;
+  --c-dgl: 234 152 152;
+  --c-dgh: 160 62 62;
+  --c-dgsoft: 58 35 37;
+  --c-nt: 161 161 170;
+  --c-ntbg: 52 52 58;
+}
+
+@layer base {
+  * {
+    @apply box-border m-0 p-0 tracking-normal;
+  }
+  
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply font-sans text-[14px] leading-[20px] text-tx bg-page;
+  }
+
+      :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+    background-color: rgb(var(--c-bg));
+    color: rgb(var(--c-tx));
+  }
+
+  ::placeholder {
+    color: rgb(var(--c-txm));
+  }
+}
+@keyframes modalOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modalDialogIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.fixed.inset-0.flex.items-center.justify-center.backdrop-blur-sm {
+  animation: modalOverlayIn 180ms ease-out both;
+}
+.fixed.inset-0.flex.items-center.justify-center.backdrop-blur-sm > * {
+  animation: modalDialogIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fixed.inset-0.flex.items-center.justify-center.backdrop-blur-sm,
+  .fixed.inset-0.flex.items-center.justify-center.backdrop-blur-sm > * {
+    animation: none;
+  }
+}
+
+@keyframes modalOverlayOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes modalDialogOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(8px) scale(0.98); }
+}
+.modal-exit {
+  pointer-events: none;
+  animation: modalOverlayOut 160ms ease-in both !important;
+}
+.modal-exit > * {
+  animation: modalDialogOut 160ms ease-in both !important;
+}

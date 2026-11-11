@@ -1,0 +1,46 @@
+build_frontend:
+  stage: build
+
+  tags:
+    - discipline
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      when: never
+      changes:
+        - frontend/**/*
+
+  script:
+    - printf "%s" "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" --username "$CI_REGISTRY_USER" --password-stdin
+    - cd frontend
+    - docker build --file Dockerfile --tag "$CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA"
+
+deploy_frontend:
+  stage: deploy
+
+  tags:
+    - discipline
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      when: never
+      changes:
+        - frontend/**/*
+
+  environment:
+    name: test-frontend
+
+  script:
+    - printf "%s" "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" --username "$CI_REGISTRY_USER" --password-stdin
+    - cp frontend/docker-compose.yml "$FRONTEND_PATH/docker-compose.yml"
+    - cp frontend/docker-compose.server.yml "$FRONTEND_PATH/docker-compose.server.yml"
+    - cp frontend/nginx.https.conf "$FRONTEND_PATH/nginx.https.conf"
+
+    - export IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
+
+    - cd "$FRONTEND_PATH"
+    - docker compose -f docker-compose.yml -f docker-compose.server.yml config
+    - docker compose -f docker-compose.yml -f docker-compose.server.yml pull frontend
+    - docker compose -f docker-compose.yml -f docker-compose.server.yml up -d --remove-orphans
+    - docker compose -f docker-compose.yml -f docker-compose.server.yml ps

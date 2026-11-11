@@ -1,0 +1,16 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${CI_REGISTRY_IMAGE:-local}/frontend:${IMAGE_TAG:-1.0}
+    container_name: innotech-frontend
+    ports:
+      - "80:80"
+    networks:
+      - innotech-network
+    restart: unless-stopped
+
+networks:
+  innotech-network:
+    external: true
